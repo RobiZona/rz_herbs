@@ -1,94 +1,141 @@
-local Resource = GetCurrentResourceName()
+local Resource = GetCurrentResourceName() -- don't touch
 
 RegisterNetEvent(Resource..':EatHerbs')
 AddEventHandler(Resource..':EatHerbs', function(hash)
     if Config.EatHerbs[hash] then
+        -- Your Notify
+        RZCL.Notify(L.titlenotify, L.eat..' '..Config.EatHerbs[hash][1].name, Config.EatHerbs[hash][1].img.dict, Config.EatHerbs[hash][1].img.texture, 5000)
+
         if hash == -190820666 then
             -- choose your effect
-        end
-        if hash == 1640283709 then
             
+            -- TriggerEvent("vorpmetabolism:changeValue", "Thirst", 1000)
+            -- TriggerEvent("vorpmetabolism:changeValue", "Hunger", 1000)
+            -- TriggerEvent('fred_meta:consume', 100, 100, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0) -- Fred Metabolism
         end
-        if hash == -781771732 then
-            
+        --[[ "Alaskan Ginseng" ]] if hash == -1194833913 then
+            -- choose your effect
+
         end
-        if hash == 454655011 then
-            
+        --[[ "American Ginseng" ]] if hash == -781771732 then
+            -- choose your effect
+
         end
-        if hash == 63835692 then
-            
+        --[[ "Bay Bolete" ]] if hash == -1202590500 then
+            -- choose your effect
+
         end
-        if hash == 926616681 then
-            
+        --[[ "Black Berry" ]] if hash == -550091683 then
+            -- choose your effect
+
         end
-        if hash == 561391114 then
-            
+        --[[ "Black Currant" ]] if hash == -190820666 then
+            -- choose your effect
+
         end
-        if hash == -1298766667 then
-            
+        --[[ "Burdock Root" ]] if hash == 63835692 then
+            -- choose your effect
+
         end
-        if hash == -231430744 then
-            
+        --[[ "Chanterelle" ]] if hash == -1524011012 then
+            -- choose your effect
+
         end
-        if hash == -1202590500 then
-            
+        --[[ "Common Bulrush" ]] if hash == -1291682103 then
+            -- choose your effect
+
         end
-        if hash == -1333051172 then
-            
+        --[[ "Creeping Thyme" ]] if hash == 2129486088 then
+            -- choose your effect
+
         end
-        if hash == 76556053 then
-            
+        --[[ "Crows Garlic" ]] if hash == 428150654 then
+            -- choose your effect
+
         end
-        if hash == 1057523711 then
-            
+        --[[ "Desert Sage" ]] if hash == 1640283709 then
+            -- choose your effect
+
         end
-        if hash == -1291682103 then
-            
+        --[[ "English Mace" ]] if hash == -177017064 then
+            -- choose your effect
+
         end
-        if hash == -177017064 then
-            
+        --[[ "Evergreen Huckleberry" ]] if hash == -231430744 then
+            -- choose your effect
+
         end
-        if hash == 918835244 then
-            
+        --[[ "Golden Currant" ]] if hash == -1298766667 then
+            -- choose your effect
+
         end
-        if hash == -1326233925 then
-            
+        --[[ "Hummingbird Sage" ]] if hash == 68963282 then
+            -- choose your effect
+
         end
-        if hash == -1019761233 then
-            
+        --[[ "Indian Tobacco" ]] if hash == 316930447 then
+            -- choose your effect
+
         end
-        if hash == -550091683 then
-            
+        --[[ "Milkweed" ]] if hash == -1944784826 then
+            -- choose your effect
+
         end
-        if hash == -423117050 then
-            
+        --[[ "Oleander Sage" ]] if hash == 454655011 then
+            -- choose your effect
+
         end
-        if hash == -780853522 then
-            
+        --[[ "Oregano" ]] if hash == 2033030310 then
+            -- choose your effect
+
         end
-        if hash == 68963282 then
-            
+        --[[ "Parasol Mushroom" ]] if hash == 926616681 then
+            -- choose your effect
+
         end
-        if hash == -1524011012 then
-            
+        --[[ "Prairie Poppy" ]] if hash == -423117050 then
+            -- choose your effect
+
         end
-        if hash == 2033030310 then
-            
+        --[[ "Rams Head" ]] if hash == 76556053 then
+            -- choose your effect
+
         end
-        if hash == 2129486088 then
-            
+        --[[ "Red Raspberry" ]] if hash == -1326233925 then
+            -- choose your effect
+
         end
-        if hash == -351933124 then
-            
+        --[[ "Red Sage" ]] if hash == -1333051172 then
+            -- choose your effect
+
         end
-        if hash == -1194833913 then
-            
+        --[[ "Saltbush" ]] if hash == -1951860709 then
+            -- choose your effect
+
         end
-        if hash == 316930447 then
-            
+        --[[ "Violet Snowdrop" ]] if hash == -1019761233 then
+            -- choose your effect
+
         end
-        if hash == -1944784826 then
-            
+        --[[ "Wild Carrot" ]] if hash == -780853522 then
+            -- choose your effect
+
+        end
+        --[[ "Wild Feverfew" ]] if hash == 561391114 then
+            -- choose your effect
+
+        end
+        --[[ "Wild Mint" ]] if hash == -351933124 then
+            -- choose your effect
+
+        end
+        --[[ "Wintergreen Berry" ]] if hash == 1057523711 then
+            -- choose your effect
+
+        end
+        --[[ "Yarrow" ]] if hash == 918835244 then
+            -- choose your effect
+
         end
 
     end
