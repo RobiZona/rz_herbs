@@ -4,6 +4,7 @@ Language["en"] = {
 
     titlenotify = "Wild Herbs",
     found = "You found",
+    notfound = "You found nothing",
     eat = "You ate",
     nothing = "Nothing happened"
 }
