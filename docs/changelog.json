@@ -1,4 +1,7 @@
 {
+  "1.0.4": [
+    "Public files on github"
+  ],
   "1.0.3": [
     "Major optimization of plant synchronization system",
     "Replaced full dataset callbacks with incremental version-diff updates",
