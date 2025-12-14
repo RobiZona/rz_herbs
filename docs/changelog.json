@@ -12,6 +12,6 @@
     "Move all framework functions to public/framework to allow you to upgrade"
   ],
   "1.0.0": [
-    "First release!"
+    "First release."
   ]
 }
