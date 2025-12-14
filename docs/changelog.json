@@ -1,0 +1,17 @@
+{
+  "1.0.3": [
+    "Major optimization of plant synchronization system",
+    "Replaced full dataset callbacks with incremental version-diff updates",
+    "Implemented TriggerLatentClientEvent to prevent large event warnings",
+    "Reduced network load and improved multi-player sync reliability"
+  ],
+  "1.0.2": [
+    "Fix Dataview error"
+  ],
+  "1.0.1": [
+    "Move all framework functions to public/framework to allow you to upgrade"
+  ],
+  "1.0.0": [
+    "First release"
+  ]
+}
