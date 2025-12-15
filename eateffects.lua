@@ -3,7 +3,7 @@ local Resource = GetCurrentResourceName() -- don't touch
 RegisterNetEvent(Resource..':EatHerbs')
 AddEventHandler(Resource..':EatHerbs', function(hash)
     if Config.EatHerbs[hash] then
-        -- Your Notify
+        -- Your Notify!
         RZCL.Notify(L.titlenotify, L.eat..' '..Config.EatHerbs[hash][1].name, Config.EatHerbs[hash][1].img.dict, Config.EatHerbs[hash][1].img.texture, 5000)
 
         if hash == -190820666 then
