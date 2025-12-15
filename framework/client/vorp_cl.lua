@@ -3,7 +3,7 @@ VorpCL.utils = {}
 
 RegisterNetEvent("vorp:SelectedCharacter")
 AddEventHandler("vorp:SelectedCharacter", function()
-    TriggerPlayerLoaded()
+    TriggerEvent("rz_herbs:playerLoaded")
 end)
 
 function VorpCL.Notify(firsttext, secondtext, dict, icon, duration)

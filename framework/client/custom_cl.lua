@@ -6,12 +6,12 @@ CustomCL.utils = {} -- DON'T TOUCH
 -- example 
 -- RegisterNetEvent("vorp:SelectedCharacter")
 -- AddEventHandler("vorp:SelectedCharacter", function()
---     TriggerPlayerLoaded()
+--     TriggerEvent("rz_herbs:playerLoaded")
 -- end)
 
 RegisterNetEvent("customevent")
 AddEventHandler("customevent", function()
-    TriggerPlayerLoaded()
+    TriggerEvent("rz_herbs:playerLoaded")
 end)
 
 function CustomCL.Notify(firsttext, secondtext, dict, icon, duration)
