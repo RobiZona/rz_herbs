@@ -1,4 +1,7 @@
 {
+  "1.0.7": [
+    "Changed check version and updated code for adaptation"
+  ],
   "1.0.6": [
     "Fixed a server-side error that occurred when the script was encrypted by tebex"
   ],
