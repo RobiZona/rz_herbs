@@ -1,81 +1,93 @@
 if RZ_BOOT_STATE == "BLOCKED" then return end
 
--- RZ SERVER BRIDGE - complete current integration contract
--- Optional: with standard VORP, leave every override commented out.
--- Each override replaces ONLY its matching built-in function, even with VORP running.
--- No override = built-in defaults. Player/inventory use VORP; notifications use RZ natives.
--- Never call the matching RZ API inside its override (infinite recursion).
--- These files are readable under Cfx escrow and existing files survive SDK builds.
--- SERVER source = connected player's server ID (not character ID or client PlayerId).
--- Bridge functions must RETURN their result; a later callback cannot return it.
--- Translate your system's field names, parameters and return values to this contract.
---
--- 1. PLAYER READINESS
--- Public call: local ok, ready, code = RZ.Player.IsReady(source)
--- Override result: true/false = character loaded/not loaded; nil, "ERROR" = failure.
--- Default: exports.vorp_core:GetCore().getUser(source).getUsedCharacter exists.
--- RZ.Bridge.Player.IsReady = function(source)
---     -- Query your server character system. Return a boolean.
--- end
---
--- 2. CHARACTER PROFILE
--- Public call: local profile, code = RZ.Player.Profile(source)
--- Override result: { first_name = "...", last_name = "..." }, or nil, "ERROR".
--- Both names: non-empty strings, max 96 bytes each.
--- Default: VORP getUsedCharacter.firstname/lastname mapped to first_name/last_name.
--- RZ.Bridge.Player.Profile = function(source)
---     -- Return the normalized profile, not your framework's complete player object.
--- end
---
--- 3. ITEM CATALOG (used by the menu's item selectors)
--- Public call: local items, code = RZ.Inventory.Catalog()
--- Override result: { { item = "water", label = "Water" }, ... }, or nil, "ERROR".
--- Contiguous array, max 4096 entries, unique item names (1..96 bytes), labels (1..256).
--- Empty {} means no items; nil means failure. Extra fields are discarded.
--- Default: started vorp_inventory + SELECT item,label FROM items through oxmysql.
--- RZ.Bridge.Inventory.Catalog = function()
---     -- Convert your custom inventory's catalog into the array described above.
--- end
---
--- 4. INVENTORY CAPACITY
--- Public call: local canCarry, code = RZ.Inventory.CanCarry(source, item, count)
--- item: item name (1..96 bytes); count: integer 1..100000.
--- Override result: true = can carry, false = cannot carry; false, "ERROR" = failure.
--- Default: exports.vorp_inventory:canCarryItem(source, item, count).
--- RZ.Bridge.Inventory.CanCarry = function(source, item, count)
---     -- Check capacity only. Do not add the item here.
--- end
---
--- 5. ADD ITEM
--- Public call: local added, code = RZ.Inventory.AddItem(source, item, count)
--- Same arguments as CanCarry. Return true ONLY when the item was added successfully.
--- Return false if rejected; false, "ERROR" on integration failure.
--- Default: exports.vorp_inventory:addItem(source, item, count).
--- This API does not automatically call CanCarry. Gameplay must handle both results.
--- RZ.Bridge.Inventory.AddItem = function(source, item, count)
---     -- Add exactly once; normalize your inventory's result to a boolean.
--- end
---
--- 6. NOTIFICATION TO ONE PLAYER
--- Public call: local sent, code = RZ.Notify.Left(source, payload)
--- payload: title (1..128 bytes), message (1..512), dictionary/icon (1..96 each),
--- duration_ms (integer 1..60000), color (optional, passed through).
--- Override result: true after dispatch; false, "ERROR" on failure.
--- Default: resource-scoped RZ client event, then native rendering (no VORP).
--- RZ.Bridge.Notify.Left = function(source, payload)
---     -- Map payload to your notification system; unused visual fields may be ignored.
--- end
---
--- 7. CHARACTER-LOADED EVENT (server helper, not an override)
--- Script subscribes with: RZ.Player.OnReady(function(source) ... end)
--- In your custom framework's trusted SERVER character-loaded event, call:
--- RZ.Bridge.PlayerReady(source)
--- Default already listens to VORP's server event "vorp:SelectedCharacter".
--- Do not forward the same event twice or trust a client-supplied player ID.
---
--- Errors: invalid inputs are rejected before calling your override. Known mandatory
--- updates also reject server API calls. Thrown integration errors are reported as
--- RZF-E-ADAPTER-FAILURE. Player/inventory defaults use VORP, not automatic RSG; notifications are native.
--- A returned false with code "OK" is an ordinary negative result, not an exception.
--- This is the COMPLETE current external bridge list. RZ.Config/Menu/Owner/Storage
--- are SDK services, not framework overrides. New APIs need SDK implementation first.
+-- HERBS SERVER BRIDGE: only integrations used by this product.
+-- IsReady + PlayerReady: initial sync, character selection and relog.
+-- Profile: character names in optional Discord webhook logs.
+-- Catalog: reward item selector in the owner menu.
+-- CanCarry + AddItem: collection rewards.
+-- Callbacks, config/cache, blips and plant natives do not need framework bridges.
+
+-- CUSTOM FRAMEWORK AND INVENTORY
+-- Standard VORP: no changes are required.
+-- Each function includes a commented VORP reference implementation.
+-- For a custom framework or inventory, place its equivalent call in the empty body.
+-- Keep the arguments and return values required by the SDK.
+-- Do not modify gameplay logic or generated .rz files.
+-- Implement only what you need: empty functions use the default implementation.
+-- Player/Inventory: nil without an error uses the default.
+-- Notifications are handled by the client bridge only.
+-- After performing an action, always return true/false to prevent the default from also running.
+-- You may replace a single call; all other calls continue to use VORP.
+-- playerSource is the player server ID, not the character ID.
+-- Do not call an RZ API from its own bridge: this would recurse indefinitely.
+-- Return the result from the function, not from a callback that runs later.
+-- Full contract: https://rz-development-website.pages.dev/bridges
+
+-- CHARACTER READY
+-- Used by RZ.Player.IsReady(playerSource).
+-- Return true when loaded, false when not ready, or nil, "CUSTOM_ERROR" on failure.
+RZ.Bridge.Player.IsReady = function(playerSource)
+    --     VORP (default implementation):
+--     local Core = exports.vorp_core:GetCore()
+--     local user = Core.getUser(playerSource)
+--     return user ~= nil and user.getUsedCharacter ~= nil
+--         
+end
+
+-- FIRST AND LAST NAME
+-- Used by RZ.Player.Profile(playerSource).
+-- Return { first_name = "First", last_name = "Last" }, or nil, "CUSTOM_ERROR".
+RZ.Bridge.Player.Profile = function(playerSource)
+    --     VORP:
+--     local user = exports.vorp_core:GetCore().getUser(playerSource)
+--     local character = user and user.getUsedCharacter
+--     if not character then return nil, "CHARACTER_NOT_READY" end
+--     return { first_name = character.firstname, last_name = character.lastname }
+--         
+end
+
+-- ITEM CATALOG FOR THE MENU
+-- Used by RZ.Inventory.Catalog().
+-- Return { { item = "water", label = "Water" }, ... }, or nil, "CUSTOM_ERROR".
+-- Use a dense array; at most 4096 items with unique names.
+RZ.Bridge.Inventory.Catalog = function()
+    --     VORP (requires vorp_inventory to be started):
+--     return MySQL.query.await("SELECT `item`, `label` FROM `items` ORDER BY `item` LIMIT 4097", {})
+--         
+end
+
+-- INVENTORY CAPACITY
+-- Used by RZ.Inventory.CanCarry(playerSource, item, count).
+-- item = item name; count = integer quantity. Return true or false.
+-- Only check capacity; do not add items here.
+RZ.Bridge.Inventory.CanCarry = function(playerSource, item, count)
+    --     VORP:
+--     return exports.vorp_inventory:canCarryItem(playerSource, item, count)
+--         
+end
+
+-- ADD ITEMS
+-- Used by RZ.Inventory.AddItem(playerSource, item, count).
+-- Return true only when the item was added; otherwise false, "CUSTOM_ERROR".
+-- Add items once only. The script must call CanCarry separately.
+RZ.Bridge.Inventory.AddItem = function(playerSource, item, count)
+    --     VORP:
+--     return exports.vorp_inventory:addItem(playerSource, item, count)
+--         
+end
+
+-- Notifications are customized only in public/bridge_client.lua.
+
+-- EVENT: FRAMEWORK CHARACTER LOADED
+-- Player.IsReady checks current readiness; PlayerReady signals that loading just completed.
+-- The SDK ALREADY connects VORP using this code: do NOT enable it again here.
+-- AddEventHandler("vorp:SelectedCharacter", function(playerSource)
+--     RZ.Bridge.PlayerReady(playerSource)
+-- end)
+-- For a custom framework, use its SERVER character-loaded event,
+-- extract the real server ID from its arguments and pass that ID to PlayerReady.
+-- VORP already passes the server ID; other frameworks may pass a table.
+-- This calls the script handlers registered with RZ.Player.OnReady. Do not use RegisterNetEvent
+-- to let a client choose which player to declare ready.
+-- The event does not repeat for players already online when the resource restarts:
+-- use RZ.Player.IsReady(playerSource) for the initial check.
